@@ -1704,9 +1704,9 @@ function sendForm(t){
   inputs.forEach(i=>{
     const ph=i.placeholder||'';
     const phL=ph.toLowerCase();
+    if(i.type==='email') { from_email=i.value.trim(); return; }
     if(phL.includes('prénom')||phL.includes('jean')) prenom=i.value.trim();
     else if(phL.includes('nom')||phL.includes('dupont')) nom=i.value.trim();
-    if(phL.includes('email')||i.type==='email') from_email=i.value.trim();
     if(phL.includes('sujet')||phL.includes('objet')) subject=i.value.trim();
     if(i.type==='tel') phone=i.value.trim();
     if(i.tagName==='TEXTAREA') message=i.value.trim();
