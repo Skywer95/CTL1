@@ -569,15 +569,15 @@ footer{background:#060606;border-top:1px solid var(--bd)}
 
 <!-- LIGHTBOX -->
 <div id="lightbox" style="visibility:hidden;pointer-events:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:8000;display:flex;align-items:center;justify-content:center;flex-direction:column" onclick="closeLightbox()">
-  <button onclick="closeLightbox()" style="position:absolute;top:1.5rem;right:2rem;background:none;border:none;color:rgba(255,255,255,0.5);font-size:2rem;cursor:pointer">✕</button>
-  <button id="lb-prev" onclick="event.stopPropagation();lbNav(-1)" style="position:absolute;left:2rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.5rem;width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center">←</button>
-  <button id="lb-next" onclick="event.stopPropagation();lbNav(1)" style="position:absolute;right:2rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.5rem;width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center">→</button>
+  <button onclick="closeLightbox()" style="position:absolute;top:1.5rem;right:2rem;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:1.8rem;cursor:pointer;z-index:9999;width:48px;height:48px;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+  <button id="lb-prev" onclick="event.stopPropagation();lbNav(-1)" style="position:absolute;left:2rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.5rem;width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:9999">←</button>
+  <button id="lb-next" onclick="event.stopPropagation();lbNav(1)" style="position:absolute;right:2rem;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:1.5rem;width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:9999">→</button>
   <div id="lb-normal" style="max-width:90vw;max-height:85vh;text-align:center">
     <img id="lb-img" src="" style="max-width:100%;max-height:80vh;object-fit:contain;display:block">
     <div id="lb-caption" style="color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;margin-top:1rem"></div>
   </div>
   <div id="lb-aa" style="display:none;width:100%;height:100%;position:absolute;inset:0;align-items:center;justify-content:center">
-    <div style="display:flex;width:100%;height:100%" onclick="event.stopPropagation()">
+    <div style="display:flex;width:100%;height:100%">
       <div style="flex:1;position:relative;overflow:hidden;background:#000">
         <img id="lb-before-blur" src="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(18px);transform:scale(1.1);opacity:0.45;pointer-events:none">
         <img id="lb-before" src="" style="position:relative;width:100%;height:100%;object-fit:contain;display:block">
@@ -1699,17 +1699,19 @@ function sendForm(t){
 
   // Récupérer les champs du formulaire
   const form=cb.closest('.form-wrap');
-  const inputs=form.querySelectorAll('input[type=text],input[type=email],textarea');
-  let from_name='', from_email='', subject='', message='', phone='';
+  const inputs=form.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea');
+  let prenom='', nom='', from_name='', from_email='', subject='', message='', phone='';
   inputs.forEach(i=>{
-    const label=i.previousElementSibling||i.parentElement.previousElementSibling;
     const ph=i.placeholder||'';
-    if(ph.toLowerCase().includes('prénom')||ph.toLowerCase().includes('jean')) from_name=(from_name+' '+i.value).trim();
-    if(ph.toLowerCase().includes('email')) from_email=i.value;
-    if(ph.toLowerCase().includes('sujet')||ph.toLowerCase().includes('objet')) subject=i.value;
-    if(i.type==='tel') phone=i.value;
-    if(i.tagName==='TEXTAREA') message=i.value;
+    const phL=ph.toLowerCase();
+    if(phL.includes('prénom')||phL.includes('jean')) prenom=i.value.trim();
+    else if(phL.includes('nom')||phL.includes('dupont')) nom=i.value.trim();
+    if(phL.includes('email')||i.type==='email') from_email=i.value.trim();
+    if(phL.includes('sujet')||phL.includes('objet')) subject=i.value.trim();
+    if(i.type==='tel') phone=i.value.trim();
+    if(i.tagName==='TEXTAREA') message=i.value.trim();
   });
+  from_name=([prenom,nom].filter(Boolean).join(' '))||'Anonyme';
 
   if(!from_email||!message){alert('Veuillez remplir au moins votre email et votre message.');return;}
 
